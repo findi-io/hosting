@@ -1,2 +1,2 @@
 # hosting
-hosting template using argocd, helm and jupyterlab
+hosting template using argocd, helm
