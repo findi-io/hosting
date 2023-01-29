@@ -8,7 +8,7 @@ metadata:
     name: matomo
 spec:
   # The project the application belongs to.
-  project: {{.Relase.Namespace}}
+  project: {{.Release.Namespace}}
 
   # Source of the application manifests
   source:
@@ -28,7 +28,7 @@ spec:
         matomoPassword: randomPassword
         matomoEmail: demo.user@test.com
         matomoWebsiteName: Ghost
-        matomoWebsiteHost: https://ghost.{{.Relase.Namespace}}.findi.biz
+        matomoWebsiteHost: https://ghost.{{.Release.Namespace}}.findi.biz
         allowEmptyPassword: false
         matomoSkipInstall: false
         containerSecurityContext:
@@ -49,7 +49,7 @@ spec:
           database: ghost
         ingress:
           enabled: true
-          hostname: matomo.{{.Relase.Namespace}}.findi.biz
+          hostname: matomo.{{.Release.Namespace}}.findi.biz
           tls: false
           annotations:
             external-dns: "true"
@@ -57,7 +57,7 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
-    namespace: {{.Relase.Namespace}}
+    namespace: {{.Release.Namespace}}
 
   # Will ignore differences between live and desired states during the diff. Note that these configurations are not
   # used during the sync process.
