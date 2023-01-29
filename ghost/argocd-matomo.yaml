@@ -8,7 +8,7 @@ metadata:
     name: matomo
 spec:
   # The project the application belongs to.
-  project: envsetup
+  project: {{.Relase.Namespace}}
 
   # Source of the application manifests
   source:
