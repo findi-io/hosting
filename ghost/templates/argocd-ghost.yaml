@@ -7,7 +7,7 @@ metadata:
     name: ghost
 spec:
   # The project the application belongs to.
-  project: {{.Relase.Namespace}}
+  project: {{.Release.Namespace}}
 
   # Source of the application manifests
   source:
@@ -58,7 +58,7 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
-    namespace: {{.Relase.Namespace}}
+    namespace: {{.Release.Namespace}}
 
   # Will ignore differences between live and desired states during the diff. Note that these configurations are not
   # used during the sync process.
