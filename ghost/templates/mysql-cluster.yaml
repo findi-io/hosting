@@ -87,8 +87,8 @@ spec:
         memory: 0.4G
         cpu:    100m
       limits:
-        memory: 0.4G
-        cpu:    100m
+        memory: 0.6G
+        cpu:    200m
   #   tolerations: []
   #   priorityClassName:
   #   serviceAccountName: default
