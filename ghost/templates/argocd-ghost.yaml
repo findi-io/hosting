@@ -23,6 +23,13 @@ spec:
       releaseName: ghost
       version: v3
       values: |
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "256m"
+          limits:
+            memory: "512Mi"
+            cpu: "256m"
         service:
           type: ClusterIP
         replicaCount: 1
