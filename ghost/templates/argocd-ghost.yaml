@@ -26,10 +26,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "256m"
+            cpu: "200m"
           limits:
             memory: "512Mi"
-            cpu: "256m"
+            cpu: "200m"
         service:
           type: ClusterIP
         replicaCount: 1
