@@ -1,5 +1,8 @@
 ghost:
   endpoint: http://ghost.test.svc.cluster.local:80
+matomo:
+  host: matomo.test.svc.cluster.local
+  port: 80
 server:
   port: 8080
   

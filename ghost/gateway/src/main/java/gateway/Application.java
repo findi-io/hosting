@@ -39,6 +39,13 @@ public class Application {
 	@Value("${ghost.endpoint}")
 	private String ghostEndpoint;
 	
+	@Value("${matomo.host}")
+	private String matomoHost;
+	
+	@Value("${matomo.port}")
+	private int matomoPort;
+	
+	
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
@@ -76,7 +83,7 @@ public class Application {
 						logger.info("send tracking {}",exchange.getResponse().getHeaders().getContentType());
 						if(exchange.getResponse().getHeaders().getContentType()!= null && exchange.getResponse().getHeaders().getContentType().toString().startsWith("text/html")) {
 							webClient.get().uri(uriBuilder -> {
-								uriBuilder = uriBuilder.scheme("http").host("matomo.app.svc.cluster.local").port(80)
+								uriBuilder = uriBuilder.scheme("http").host(matomoHost).port(matomoPort)
 										.path("//matomo.php").queryParam("idsite", "1").queryParam("rec", "1")
 										.queryParam("action_name", "pageView").queryParam("rand", new Random().nextInt())
 //										.queryParam("apiv", "1").queryParam("token_auth", token)
