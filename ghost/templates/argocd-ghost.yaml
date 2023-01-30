@@ -48,6 +48,7 @@ spec:
           sidecar.istio.io/inject: "false"
         persistence:
           enabled: true
+          size: 1Gi
         mysql:
           enabled: false
         externalDatabase:
