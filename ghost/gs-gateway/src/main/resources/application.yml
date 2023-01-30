@@ -1,3 +1,5 @@
+tracking:
+  token: 4b403e684c697dfe289752ca145caddc
 ghost:
   endpoint: http://ghost.test.svc.cluster.local:80
 matomo:

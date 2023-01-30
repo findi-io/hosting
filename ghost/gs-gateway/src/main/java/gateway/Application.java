@@ -41,6 +41,10 @@ public class Application {
 
 	@Value("${matomo.host}")
 	private String matomoHost;
+	
+	
+	@Value("${tracking.token}")
+	private String token;
 
 
 	public static void main(String[] args) {
@@ -84,7 +88,7 @@ public class Application {
 										.path("//matomo.php").queryParam("idsite", "1").queryParam("rec", "1")
 										.queryParam("action_name", "pageView").queryParam("rand", new Random().nextInt())
 										.queryParam("apiv", "1")
-										// .queryParam("token_auth", token) use auth for user info
+										.queryParam("token_auth", token)
 										.queryParam("cip", (String) exchange.getRequest().getHeaders().getFirst("x-real-ip"))
 										.queryParam("city", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-city"))
 										.queryParam("lang", "en")
