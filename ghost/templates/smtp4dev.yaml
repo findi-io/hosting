@@ -53,7 +53,8 @@ metadata:
     external-dns: "true"
 spec:
   rules:
-  - http:
+  - host: smtp4dev.{{.Release.Namespace}}.findi.biz
+    http:
       paths:
       - path: /
         pathType: Prefix
