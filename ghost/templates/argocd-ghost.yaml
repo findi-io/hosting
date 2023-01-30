@@ -34,12 +34,6 @@ spec:
           type: ClusterIP
         replicaCount: 1
         ghostSkipInstall: true
-        image:
-          registry: docker.io
-          repository: jasonhao123/ghost
-          tag: "0.3"
-          pullPolicy: Always
-          debug: true
         podAnnotations:
           sidecar.istio.io/inject: "false"
         persistence:
