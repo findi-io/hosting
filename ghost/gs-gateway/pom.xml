@@ -72,7 +72,7 @@
 				<version>3.2.1</version>
 				<configuration>
 					<to>
-						<image>your/repo:${project.version}</image>
+						<image>your-repo/ghost-gateway:${project.version}</image>
 					</to>
 				</configuration>
 			</plugin>
