@@ -80,6 +80,9 @@ spec:
           - mountPath: /docker-entrypoint-init.d/custom_init_script.sql
             name: custom-postinit
             subPath: custom_init_script.sql
+          - mountPath: /docker-entrypoint-init.d/custom_init_script.sh
+            name: custom-postinit
+            subPath: custom_init_script.sh
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://kubernetes.default.svc
