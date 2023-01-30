@@ -187,7 +187,7 @@ ghost_validate() {
 #   None
 #########################
 ghost_conf_set() {
-
+    echo "dummy ghost_conf_set"
 }
 
 ########################
