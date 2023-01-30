@@ -33,6 +33,7 @@ spec:
         service:
           type: ClusterIP
         replicaCount: 1
+        ghostSkipInstall: true
         image:
           registry: docker.io
           repository: jasonhao123/ghost
