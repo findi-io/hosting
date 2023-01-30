@@ -64,11 +64,7 @@ spec:
           password: randomPassword
           database: ghost
         ingress:
-          enabled: true
-          hostname: ghost.{{.Release.Namespace}}.findi.biz
-          tls: false
-          annotations:
-            external-dns: "true"
+          enabled: false
 
   # Destination cluster and namespace to deploy the application
   destination:
