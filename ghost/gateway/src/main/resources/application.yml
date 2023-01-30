@@ -1,0 +1,5 @@
+ghost:
+  endpoint: http://ghost.test.svc.cluster.local:80
+server:
+  port: 8080
+  
