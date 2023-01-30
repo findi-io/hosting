@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maxscale-config
+data:
+  mariadb-maxscale.cnf: |
+    [maxscale]
+    threads=auto
+    admin_secure_gui=false
+    log_info=true
+    log_debug=true
+    log_warn_super_user=true
+    skip_name_resolve=true
+
+    # this enables external access to the REST API outside of localhost
+    # please review / modify for any public / non development environments
+    admin_host=0.0.0.0
+
+    # Server definitions
+    #
+    # Set the address of the server to the network
+    # address of a MariaDB server.
+    #
+
+    [ghost-master]
+    type=server
+    address=ghost-cluster-mysql-master.{{.Release.Namespace}}.svc.cluster.local
+    port=3306
+    protocol=MariaDBBackend
+
+    [ghost-replica]
+    type=server
+    address=ghost-cluster-mysql-replicas.{{.Release.Namespace}}.svc.cluster.local
+    port=3306
+    protocol=MariaDBBackend
+
+
+    # Monitor for the servers
+    #
+    # This will keep MaxScale aware of the state of the servers.
+    # MariaDB Monitor documentation:
+    # https://mariadb.com/kb/en/maxscale-25-monitors/
+
+    [mariadb]
+    type=monitor
+    module=mariadbmon
+    servers=ghost-master,ghost-replica
+    user=ghost
+    password=randomPassword
+
+    # Service definitions
+    #
+    # Service Definition for a read-only service and
+    # a read/write splitting service.
+    #
+
+    # ReadWriteSplit documentation:
+    # https://mariadb.com/kb/en/mariadb-maxscale-25-readwritesplit/
+
+    [mariadbsvc]
+    password=randomPassword
+    router=readwritesplit
+    type=service
+    user=ghost
+    master_failure_mode=fail_instantly
+    max_slave_replication_lag=3s
+    transaction_replay_retry_on_deadlock=false
+    transaction_replay_retry_on_mismatch=false
+    transaction_replay_timeout=3000ms
+    causal_reads=false
+    connection_timeout=300s
+    master_accept_reads=true
+    master_reconnection=false
+    slave_selection_criteria=LEAST_CURRENT_OPERATIONS
+    targets=ghost-master,ghost-replica
+
+    [mariadblistener]
+    port=3306
+    service=mariadbsvc
+    type=listener
