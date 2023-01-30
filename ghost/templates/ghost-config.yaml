@@ -20,7 +20,7 @@ data:
           "max": 20
         }
       },
-      "url": "https://ghost.{{.Release.Namespace}}.findi.biz/",
+      "url": "http://ghost.{{.Release.Namespace}}.findi.biz/",
       "server": {
         "port": 2368,
         "host": "0.0.0.0"

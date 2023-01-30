@@ -34,7 +34,7 @@ spec:
           type: ClusterIP
         replicaCount: 1
         ghostSkipInstall: true
-        ghostEnableHttps: true
+        ghostEnableHttps: false
         podAnnotations:
           sidecar.istio.io/inject: "false"
         persistence:
@@ -69,6 +69,21 @@ spec:
           tls: false
           annotations:
             external-dns: "true"
+            nginx.ingress.kubernetes.io/configuration-snippet: |
+              log_by_lua_block {
+                   local log_dict = ngx.shared.log_dict
+                   local upstream_time = tonumber(ngx.var.upstream_response_time)
+
+                   local sum = log_dict:get("upstream_time-sum") or 0
+                   sum = sum + upstream_time
+                   log_dict:set("upstream_time-sum", sum)
+
+                   local newval, err = log_dict:incr("upstream_time-nb", 1)
+                   if not newval and err == "not found" then
+                       log_dict:add("upstream_time-nb", 0)
+                       log_dict:incr("upstream_time-nb", 1)
+                   end
+              }
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://kubernetes.default.svc
