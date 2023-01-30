@@ -14,7 +14,7 @@ spec:
   # Source of the application manifests
   source:
     repoURL: https://charts.bitnami.com/bitnami  # Can point to either a Helm chart repo or a git repo.
-    targetRevision: 19.1.60  # For Helm, this refers to the chart version.
+    targetRevision: 19.1.61  # For Helm, this refers to the chart version.
     chart: ghost  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     helm:
