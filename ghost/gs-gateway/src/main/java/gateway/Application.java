@@ -35,24 +35,24 @@ import reactor.netty.resources.ConnectionProvider;
 public class Application {
 
 	private Logger logger = LoggerFactory.getLogger(Application.class);
-	
+
 	@Value("${ghost.endpoint}")
 	private String ghostEndpoint;
-	
+
 	@Value("${matomo.host}")
 	private String matomoHost;
-	
+
 	@Value("${matomo.port}")
-	private int matomoPort;
-	
-	
+	private String matomoPort;
+
+
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
-	@Bean     
-	public WebClient webClient() {   
-	
+	@Bean
+	public WebClient webClient() {
+
 		ConnectionProvider provider = ConnectionProvider.builder("fixed")
 				.maxConnections(500)
 				.maxIdleTime(Duration
@@ -60,12 +60,12 @@ public class Application {
 				.maxLifeTime(Duration.ofSeconds(60))
 				.pendingAcquireTimeout(Duration.ofSeconds(60))
 				.evictInBackground(Duration.ofSeconds(120)).build();
-	
+
 		return WebClient.builder()
 				.clientConnector(new ReactorClientHttpConnector(HttpClient.create(provider).responseTimeout(Duration.ofMillis(600))))
 				.build();
 	}
-	
+
 	// tag::route-locator[]
 	@Bean
 	public RouteLocator myRoutes(RouteLocatorBuilder builder, UriConfiguration uriConfiguration, WebClient webClient) {
@@ -83,7 +83,7 @@ public class Application {
 						logger.info("send tracking {}",exchange.getResponse().getHeaders().getContentType());
 						if(exchange.getResponse().getHeaders().getContentType()!= null && exchange.getResponse().getHeaders().getContentType().toString().startsWith("text/html")) {
 							webClient.get().uri(uriBuilder -> {
-								uriBuilder = uriBuilder.scheme("http").host(matomoHost).port(matomoPort)
+								uriBuilder = uriBuilder.scheme("http").host(matomoHost).port(Integer.parseInt(matomoPort))
 										.path("//matomo.php").queryParam("idsite", "1").queryParam("rec", "1")
 										.queryParam("action_name", "pageView").queryParam("rand", new Random().nextInt())
 //										.queryParam("apiv", "1").queryParam("token_auth", token)
@@ -91,10 +91,10 @@ public class Application {
 //										.queryParam("city", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-city"))
 //										.queryParam("lang", "en")
 //										.queryParam("region", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-region"))
-//										
+//
 //										.queryParam("lat", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-latitude"))
 //										.queryParam("long", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-longitude"))
-//										.queryParam("country", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-city-country-code"))					
+//										.queryParam("country", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-city-country-code"))
 //										.queryParam("urlref", exchange.getRequest().getHeaders().getFirst(HttpHeaders.REFERER))
 										.queryParam("url",
 												exchange.getRequest().getURI().toString().replaceAll("portal.app.svc.cluster.local",
@@ -103,7 +103,7 @@ public class Application {
 								URI uri = uriBuilder.build();
 								logger.info(uri.toString());
 								return uri;
-							
+
 							}).retrieve().toEntity(String.class).doOnError(e->logger.warn(e.getMessage())).onErrorReturn(ResponseEntity.ok("")).subscribe();
 
 						}
@@ -126,7 +126,7 @@ public class Application {
 // tag::uri-configuration[]
 @ConfigurationProperties
 class UriConfiguration {
-	
+
 	private String httpbin = "http://httpbin.org:80";
 
 	public String getHttpbin() {

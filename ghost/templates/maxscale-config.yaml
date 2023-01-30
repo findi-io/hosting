@@ -45,7 +45,7 @@ data:
     type=monitor
     module=mariadbmon
     servers=ghost-master,ghost-replica
-    user=ghost
+    user=root
     password=randomPassword
 
     # Service definitions
@@ -61,7 +61,7 @@ data:
     password=randomPassword
     router=readwritesplit
     type=service
-    user=ghost
+    user=root
     master_failure_mode=fail_instantly
     max_slave_replication_lag=3s
     transaction_replay_retry_on_deadlock=false
