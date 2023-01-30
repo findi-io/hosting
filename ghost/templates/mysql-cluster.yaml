@@ -82,14 +82,6 @@ spec:
   #         command:
   #           - /scripts/demote-if-master
   #   nodeSelector: {}
-    initContainers:
-      resources:
-        requests:
-          memory: 0.4G
-          cpu:    100m
-        limits:
-          memory: 0.4G
-          cpu:    100m
     resources:
       requests:
         memory: 0.4G
