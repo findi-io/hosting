@@ -33,22 +33,27 @@ spec:
         service:
           type: ClusterIP
         replicaCount: 1
-        ghostUsername: "Demo User"
-        ghostPassword: randomPassword
-        ghostEnableHttps: false
-        ghostEmail: demo.user@test.com
-        ghostBlogTitle: "Demo"
-        ghostHost: ghost.{{.Release.Namespace}}.findi.biz
-        smtpHost: smtp4dev.{{.Release.Namespace}}.svc.cluster.local
-        smtpPort: 25
-        smtpUser: "postmaster"
-        smtpPassword: "mailpassword"
-        smtpService: "Mailgun"
         podAnnotations:
           sidecar.istio.io/inject: "false"
         persistence:
           enabled: true
           size: 1Gi
+        extraVolumes:
+          - configMap:
+              defaultMode: 420
+              name: ghost-config
+            name: ghost-config
+          - configMap:
+              defaultMode: 420
+              name: ghost-patch
+            name: ghost-patch
+        extraVolumeMounts:
+          - mountPath: /opt/bitnami/ghost/config.production.json
+            name: ghost-config
+            subPath: config.production.json
+          - mountPath: /opt/bitnami/scripts/libghost.sh
+            name: ghost-patch
+            subPath: libghost.sh
         mysql:
           enabled: false
         externalDatabase:
