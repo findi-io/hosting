@@ -24,13 +24,13 @@ data:
 
     [ghost-master]
     type=server
-    address=ghost-cluster-mysql-master.{{.Release.Namespace}}.svc.cluster.local
+    address=mysql-primary.{{.Release.Namespace}}.svc.cluster.local
     port=3306
     protocol=MariaDBBackend
 
     [ghost-replica]
     type=server
-    address=ghost-cluster-mysql-replicas.{{.Release.Namespace}}.svc.cluster.local
+    address=mysql-secondary.{{.Release.Namespace}}.svc.cluster.local
     port=3306
     protocol=MariaDBBackend
 

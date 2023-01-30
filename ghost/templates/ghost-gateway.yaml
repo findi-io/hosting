@@ -43,11 +43,11 @@ spec:
               containerPort: 8080
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "128m"
-            limits:
               memory: "512Mi"
               cpu: "256m"
+            limits:
+              memory: "1024Mi"
+              cpu: "512m"
           livenessProbe:
             initialDelaySeconds: 40
             periodSeconds: 5
