@@ -62,6 +62,15 @@ spec:
           tls: false
           annotations:
             external-dns: "true"
+        extraEnvVars:
+          - name: MARIADB_HOST
+            value: maxscale.{{.Release.Namespace}}.svc.cluster.local
+          - name: MARIADB_PORT_NUMBER
+            value: 3306
+          - name: MARIADB_ROOT_USER
+            value: ghost
+          - name: MARIADB_ROOT_PASSWORD
+            value: randomPassword
         extraVolumes:
           - configMap:
               defaultMode: 420
