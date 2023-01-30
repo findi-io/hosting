@@ -40,7 +40,7 @@ spec:
         podAnnotations:
           sidecar.istio.io/inject: "false"
         persistence:
-          enabled: false
+          enabled: true
           size: 1Gi
         extraVolumes:
           - configMap:
