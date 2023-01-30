@@ -41,8 +41,8 @@ spec:
             memory: "512Mi"
             cpu: "200m"
           limits:
-            memory: "512Mi"
-            cpu: "200m"
+            memory: "1024Mi"
+            cpu: "400m"
         podAnnotations:
           sidecar.istio.io/inject: "false"
         persistence:
