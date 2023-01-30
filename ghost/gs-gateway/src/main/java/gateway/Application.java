@@ -42,9 +42,6 @@ public class Application {
 	@Value("${matomo.host}")
 	private String matomoHost;
 
-	@Value("${matomo.port}")
-	private String matomoPort;
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -83,19 +80,19 @@ public class Application {
 						logger.info("send tracking {}",exchange.getResponse().getHeaders().getContentType());
 						if(exchange.getResponse().getHeaders().getContentType()!= null && exchange.getResponse().getHeaders().getContentType().toString().startsWith("text/html")) {
 							webClient.get().uri(uriBuilder -> {
-								uriBuilder = uriBuilder.scheme("http").host(matomoHost).port(Integer.parseInt(matomoPort))
+								uriBuilder = uriBuilder.scheme("http").host(matomoHost).port(80)
 										.path("//matomo.php").queryParam("idsite", "1").queryParam("rec", "1")
 										.queryParam("action_name", "pageView").queryParam("rand", new Random().nextInt())
-//										.queryParam("apiv", "1").queryParam("token_auth", token)
-//										.queryParam("cip", (String) exchange.getRequest().getHeaders().getFirst("x-real-ip"))
-//										.queryParam("city", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-city"))
-//										.queryParam("lang", "en")
-//										.queryParam("region", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-region"))
-//
-//										.queryParam("lat", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-latitude"))
-//										.queryParam("long", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-longitude"))
-//										.queryParam("country", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-city-country-code"))
-//										.queryParam("urlref", exchange.getRequest().getHeaders().getFirst(HttpHeaders.REFERER))
+										.queryParam("apiv", "1")
+										// .queryParam("token_auth", token) use auth for user info
+										.queryParam("cip", (String) exchange.getRequest().getHeaders().getFirst("x-real-ip"))
+										.queryParam("city", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-city"))
+										.queryParam("lang", "en")
+										.queryParam("region", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-region"))
+										.queryParam("lat", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-latitude"))
+										.queryParam("long", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-longitude"))
+										.queryParam("country", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-city-country-code"))
+										.queryParam("urlref", exchange.getRequest().getHeaders().getFirst(HttpHeaders.REFERER))
 										.queryParam("url",
 												exchange.getRequest().getURI().toString().replaceAll("portal.app.svc.cluster.local",
 														"www.findi.io"))

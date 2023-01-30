@@ -5,6 +5,8 @@ metadata:
   # Add labels to your application object.
   labels:
     name: ghost
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   # The project the application belongs to.
   project: {{.Release.Namespace}}

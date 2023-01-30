@@ -47,6 +47,17 @@ spec:
             limits:
               memory: "512Mi"
               cpu: "256m"
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 5
+            failureThreshold: 5
+            httpGet:
+              path: /actuator/health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
