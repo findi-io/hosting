@@ -36,6 +36,13 @@ spec:
         service:
           type: ClusterIP
         replicaCount: 1
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
         podAnnotations:
           sidecar.istio.io/inject: "false"
         persistence:
