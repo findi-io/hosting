@@ -187,7 +187,7 @@ ghost_validate() {
 #   None
 #########################
 ghost_conf_set() {
-    cat /opt/bitnami/ghost/config.production.json2 >> /opt/bitnami/ghost/config.production.json
+    echo "dummy ghost_conf_set"
 }
 
 ########################
