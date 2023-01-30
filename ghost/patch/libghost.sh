@@ -187,29 +187,7 @@ ghost_validate() {
 #   None
 #########################
 ghost_conf_set() {
-    local -r key="${1:?Missing key}"
-    local -r value="${2:-}"
-    local -r type="${3:-string}"
-    local -r tempfile=$(mktemp)
 
-    case "$type" in
-    string)
-        jq "(.${key}) |= \"${value}\"" "$GHOST_CONF_FILE" > "$tempfile"
-        ;;
-    int)
-        jq "(.${key}) |= (${value} | tonumber)" "$GHOST_CONF_FILE" > "$tempfile"
-        ;;
-    bool)
-        jq "(.${key}) |= (\"${value}\" | test(\"true\"))" "$GHOST_CONF_FILE" > "$tempfile"
-        ;;
-    json)
-        jq "(.${key}) |= ${value}" "$GHOST_CONF_FILE" > "$tempfile"
-        ;;
-    *)
-        error "Type unknown: ${type}"
-        return 1
-        ;;
-    esac
 }
 
 ########################
