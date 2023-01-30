@@ -49,7 +49,7 @@ spec:
               memory: "512Mi"
               cpu: "256m"
           livenessProbe:
-            initialDelaySeconds: 20
+            initialDelaySeconds: 40
             periodSeconds: 5
             failureThreshold: 5
             httpGet:
