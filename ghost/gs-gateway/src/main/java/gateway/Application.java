@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
@@ -36,8 +37,8 @@ public class Application {
 
 	private Logger logger = LoggerFactory.getLogger(Application.class);
 
-	@Value("${ghost.endpoint}")
-	private String ghostEndpoint;
+	@Value("${ghost.host}")
+	private String ghostHost;
 
 	@Value("${matomo.host}")
 	private String matomoHost;
@@ -73,7 +74,7 @@ public class Application {
 		String httpUri = uriConfiguration.getHttpbin();
 		return builder.routes()
 			.route(p -> p
-				.path("/**")
+				.host(ghostHost)
 				.filters(f -> f.preserveHostHeader().filter(new GatewayFilter() {
 
 					@Override
@@ -98,8 +99,7 @@ public class Application {
 										.queryParam("country", (String) exchange.getRequest().getHeaders().getFirst("X-geoip-city-country-code"))
 										.queryParam("urlref", exchange.getRequest().getHeaders().getFirst(HttpHeaders.REFERER))
 										.queryParam("url",
-												exchange.getRequest().getURI().toString().replaceAll("portal.app.svc.cluster.local",
-														"www.findi.io"))
+												exchange.getRequest().getURI().toString())
 										.queryParam("ua", exchange.getRequest().getHeaders().getFirst(HttpHeaders.USER_AGENT));
 								URI uri = uriBuilder.build();
 								logger.info(uri.toString());
@@ -111,7 +111,7 @@ public class Application {
 
 					}
 				}))
-				.uri(ghostEndpoint))
+				.uri(new DefaultUriBuilderFactory().builder().scheme("http").host(ghostHost).port(80).build("")))
 			.build();
 	}
 	// end::route-locator[]

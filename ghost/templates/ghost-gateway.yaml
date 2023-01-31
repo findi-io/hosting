@@ -32,8 +32,8 @@ spec:
           image: jasonhao123/ghost-gateway:0.1.0
           imagePullPolicy: Always
           env:
-            - name: "ghost.endpoint"
-              value: "http://ghost.{{.Release.Namespace}}.svc.cluster.local:80"
+            - name: "ghost.host"
+              value: "ghost.{{.Release.Namespace}}.svc.cluster.local"
             - name: "matomo.host"
               value: "matomo.{{.Release.Namespace}}.svc.cluster.local"
             - name: "matomo.port"
