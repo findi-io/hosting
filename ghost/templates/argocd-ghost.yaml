@@ -61,7 +61,7 @@ spec:
         mysql:
           enabled: false
         externalDatabase:
-          host: ghost-cluster-mysql-master.{{.Release.Namespace}}.svc.cluster.local
+          host: maxscale.{{.Release.Namespace}}.svc.cluster.local
           user: ghost
           password: randomPassword
           database: ghost
