@@ -74,7 +74,7 @@ public class Application {
 		String httpUri = uriConfiguration.getHttpbin();
 		return builder.routes()
 			.route(p -> p
-				.host(ghostHost)
+				.host("**.findi.biz")
 				.filters(f -> f.preserveHostHeader().filter(new GatewayFilter() {
 
 					@Override
