@@ -35,8 +35,16 @@ spec:
         - name: maxscale
           image: mariadb/maxscale:22.08.2
           ports:
-            - containerPort: 8989
-            - containerPort: 3306
+            - name: http
+              containerPort: 8989
+            - name: mysql
+              containerPort: 3306
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 3
           resources:
             requests:
               memory: "256Mi"

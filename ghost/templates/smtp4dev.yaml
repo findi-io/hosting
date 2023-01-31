@@ -37,6 +37,11 @@ spec:
           ports:
             - containerPort: 80
             - containerPort: 25
+          livenessProbe:
+            tcpSocket:
+              port: 25
+            initialDelaySeconds: 15
+            periodSeconds: 20
           resources:
             requests:
               memory: "256Mi"
