@@ -51,7 +51,7 @@ spec:
                 compression: false
                 weight: 1000
             slave:
-              enabled: true
+              enabled: false
             users:
               - username: ghost
                 password: randomPassword
