@@ -38,8 +38,18 @@ spec:
         proxysql:
           mysql:
             servers:
-              - ghost-cluster-mysql-master.{{.Release.Namespace}}.svc.cluster.local
-              - ghost-cluster-mysql-replicas.{{.Release.Namespace}}.svc.cluster.local
+              - isWriter: true
+                hostname: ghost-cluster-mysql-master.{{.Release.Namespace}}.svc.cluster.local
+                port: 3306
+                maxConnections: 1000
+                compression: false
+                weight: 1000
+              - isWriter: false
+                hostname: ghost-cluster-mysql-replicas.{{.Release.Namespace}}.svc.cluster.local
+                port: 3306
+                maxConnections: 1000
+                compression: false
+                weight: 1000
             slave:
               enabled: true
             users:
