@@ -1,56 +1,57 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mysql
-  # Add this finalizer ONLY if you want these to cascade delete.
+  name: proxysql
+  # Add labels to your application object.
   labels:
-    name: mysql
+    name: proxysql
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
+  # The project the application belongs to.
   project: {{.Release.Namespace}}
 
   # Source of the application manifests
   source:
-    repoURL: https://charts.bitnami.com/bitnami  # Can point to either a Helm chart repo or a git repo.
-    targetRevision: 9.4.6  # For Helm, this refers to the chart version.
-    chart: mysql  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    repoURL: https://christianknell.github.io/helm-charts  # Can point to either a Helm chart repo or a git repo.
+    targetRevision: 1.0.7  # For Helm, this refers to the chart version.
+    chart: proxysql  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     helm:
       passCredentials: false # If true then adds --pass-credentials to Helm commands to pass credentials to all domains
       # Extra parameters to set (same as setting through values.yaml, but these take precedence)
 
       # Release name override (defaults to application name)
-      releaseName: mysql
+      releaseName: proxysql
       version: v3
       values: |
-        architecture: replication
-        auth:
-          rootPassword: {{.Values.mysql.rootPassword}}
-          database: {{.Values.mysql.database}}
-          username: {{.Values.mysql.username}}
-          password: {{.Values.mysql.password}}
-          replicationPassword: {{.Values.mysql.replicationPassword}}
-        primary:
-          persistence:
-            size: 1G
-          resources:
-            limits:
-              cpu: 0.5
-              memory: 1Gi
-            requests:
-              cpu: 0.3
-              memory: 512Mi
-        secondary:
-          persistence:
-            size: 1G
-          resources:
-            limits:
-              cpu: 0.5
-              memory: 1Gi
-            requests:
-              cpu: 0.3
-              memory: 512Mi
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+        service:
+          type: ClusterIP
+        replicaCount: 1
+        proxysql:
+          mysql:
+            servers:
+              - mysql-primary.{{.Release.Namespace}}.svc.cluster.local
+              - mysql-secondary.{{.Release.Namespace}}.svc.cluster.local
+            slave:
+              enabled: true
+            users:
+              - username: ghost
+                password: randomPassword
+                maxConnections: 10000
+                readOnly: false
+        ingress:
+          enabled: true
+          hosts:
+            - proxysql.{{.Release.Namespace}}.findi.biz
+
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://kubernetes.default.svc
