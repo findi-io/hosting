@@ -38,6 +38,8 @@ spec:
         proxysql:
           monitor:
             enabled: true
+            user: "root"
+            password: {{.Values.mysql.rootPassword}}
           web:
             port: 6080
           mysql:
