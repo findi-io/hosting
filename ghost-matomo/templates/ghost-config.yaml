@@ -10,9 +10,9 @@ data:
         "connection": {
           "host": "maxscale.{{.Release.Namespace}}.svc.cluster.local",
           "port": 3306,
-          "database": "ghost",
-          "user": "ghost",
-          "password": "randomPassword",
+          "database": "{{.Values.mysql.database}}",
+          "user": "{{.Values.mysql.username}}",
+          "password": "{{.Values.mysql.password}}",
           "ssl": false
         },
         "pool": {
@@ -27,7 +27,7 @@ data:
       },
       "mail": {
         "transport": "SMTP",
-        "from": "demo.user@test.com",
+        "from": "{{.Values.ghost.email_from}}",
         "options": {
           "host": "smtp4dev.{{.Release.Namespace}}.svc.cluster.local",
           "port": 25,

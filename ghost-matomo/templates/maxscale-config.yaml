@@ -46,7 +46,7 @@ data:
     module=mariadbmon
     servers=ghost-master,ghost-replica
     user=root
-    password=randomPassword
+    password={{.Values.mysql.rootPassword}}
 
     # Service definitions
     #
@@ -58,7 +58,7 @@ data:
     # https://mariadb.com/kb/en/mariadb-maxscale-25-readwritesplit/
 
     [mariadbsvc]
-    password=randomPassword
+    password={{.Values.mysql.rootPassword}}
     router=readwritesplit
     type=service
     user=root

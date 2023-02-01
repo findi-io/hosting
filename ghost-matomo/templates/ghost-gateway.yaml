@@ -38,6 +38,8 @@ spec:
               value: "matomo.{{.Release.Namespace}}.svc.cluster.local"
             - name: "matomo.port"
               value: "80"
+            - name: "tracking.token"
+              value: "{{.Values.matomo.token_auth}}"
           ports:
             - name: http
               containerPort: 8080

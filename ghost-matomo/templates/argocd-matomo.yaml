@@ -1,61 +1,94 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mysql
-  # Add this finalizer ONLY if you want these to cascade delete.
+  name: matomo
+  # Add labels to your application object.
   labels:
-    name: mysql
+    name: matomo
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "2"
 spec:
+  # The project the application belongs to.
   project: {{.Release.Namespace}}
 
   # Source of the application manifests
   source:
     repoURL: https://charts.bitnami.com/bitnami  # Can point to either a Helm chart repo or a git repo.
-    targetRevision: 9.4.6  # For Helm, this refers to the chart version.
-    chart: mysql  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    targetRevision: 0.2.17  # For Helm, this refers to the chart version.
+    chart: matomo  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     helm:
       passCredentials: false # If true then adds --pass-credentials to Helm commands to pass credentials to all domains
       # Extra parameters to set (same as setting through values.yaml, but these take precedence)
 
       # Release name override (defaults to application name)
-      releaseName: mysql
+      releaseName: matomo
       version: v3
       values: |
-        architecture: replication
-        auth:
-          rootPassword: randomPassword
-          database: ghost
-          username: ghost
-          password: randomPassword
-          replicationPassword: randomPassword
-        primary:
-          persistence:
-            size: 1G
-          resources:
-            limits:
-              cpu: 0.5
-              memory: 1Gi
-            requests:
-              cpu: 0.3
-              memory: 512Mi
-        secondary:
-          persistence:
-            size: 1G
-          resources:
-            limits:
-              cpu: 0.5
-              memory: 1Gi
-            requests:
-              cpu: 0.3
-              memory: 512Mi
+        matomoUsername: demo
+        matomoPassword: randomPassword
+        matomoEmail: demo.user@test.com
+        matomoWebsiteName: Ghost
+        matomoWebsiteHost: http://ghost.{{.Release.Namespace}}.findi.biz
+        allowEmptyPassword: false
+        matomoSkipInstall: false
+        containerSecurityContext:
+          runAsNonRoot: false
+        service:
+          type: ClusterIP
+        replicaCount: 1
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "200m"
+          limits:
+            memory: "1024Mi"
+            cpu: "400m"
+        podAnnotations:
+          sidecar.istio.io/inject: "false"
+        persistence:
+          enabled: false
+        mariadb:
+          enabled: false
+        externalDatabase:
+          host: maxscale.{{.Release.Namespace}}.svc.cluster.local
+          user: {{.Values.mysql.username}}
+          password: {{.Values.mysql.password}}
+          database: {{.Values.mysql.database}}
+        ingress:
+          enabled: true
+          hostname: matomo.{{.Release.Namespace}}.findi.biz
+          tls: false
+          annotations:
+            external-dns: "true"
+        extraEnvVars:
+          - name: MARIADB_HOST
+            value: maxscale.{{.Release.Namespace}}.svc.cluster.local
+          - name: MARIADB_PORT_NUMBER
+            value: "3306"
+          - name: MARIADB_ROOT_USER
+            value: ghost
+          - name: MARIADB_ROOT_PASSWORD
+            value: randomPassword
+        extraVolumes:
+          - configMap:
+              defaultMode: 420
+              name: ghost-patch
+            name: custom-postinit
+        extraVolumeMounts:
+          - mountPath: /docker-entrypoint-init.d/custom_init_script.sql
+            name: custom-postinit
+            subPath: custom_init_script.sql
+          - mountPath: /docker-entrypoint-init.d/custom_init_script.sh
+            name: custom-postinit
+            subPath: custom_init_script.sh
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://kubernetes.default.svc
     # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
     namespace: {{.Release.Namespace}}
+
 
   # Sync policy
   syncPolicy:

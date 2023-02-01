@@ -62,9 +62,9 @@ spec:
           enabled: false
         externalDatabase:
           host: maxscale.{{.Release.Namespace}}.svc.cluster.local
-          user: ghost
-          password: randomPassword
-          database: ghost
+          user: {{.Values.mysql.username}}
+          password: {{.Values.mysql.password}}
+          database: {{.Values.mysql.database}}
         ingress:
           enabled: false
 
