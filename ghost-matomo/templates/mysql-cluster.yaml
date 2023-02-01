@@ -6,10 +6,10 @@ metadata:
 type: Opaque
 stringData:
   # root password is required to be specified
-  ROOT_PASSWORD: randomPassword
-  DATABASE: ghost
-  USER: ghost
-  PASSWORD: randomPassword
+  ROOT_PASSWORD: {{.Values.mysql.rootPassword}}
+  DATABASE: {{.Values.mysql.database}}
+  USER: {{.Values.mysql.username}}
+  PASSWORD: {{.Values.mysql.password}}
 ---
 apiVersion: mysql.presslabs.org/v1alpha1
 kind: MysqlCluster

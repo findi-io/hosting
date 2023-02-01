@@ -38,8 +38,8 @@ spec:
         proxysql:
           mysql:
             servers:
-              - mysql-primary.{{.Release.Namespace}}.svc.cluster.local
-              - mysql-secondary.{{.Release.Namespace}}.svc.cluster.local
+              - mysql-cluster-mysql-master.{{.Release.Namespace}}.svc.cluster.local
+              - mysql-cluster-mysql-replicas.{{.Release.Namespace}}.svc.cluster.local
             slave:
               enabled: true
             users:
