@@ -59,20 +59,9 @@ data:
     # https://mariadb.com/kb/en/mariadb-maxscale-25-readwritesplit/
 
     [mariadbsvc]
-    password={{.Values.mysql.rootPassword}}
     router=smartrouter
     master=ghost-master
     type=service
-    user=root
-    master_failure_mode=fail_instantly
-    max_slave_replication_lag=3s
-    transaction_replay_retry_on_deadlock=false
-    transaction_replay_retry_on_mismatch=false
-    transaction_replay_timeout=3000ms
-    causal_reads=false
-    connection_timeout=300s
-    master_accept_reads=true
-    master_reconnection=true
     targets=ghost-master,ghost-replica
 
     [mariadblistener]
