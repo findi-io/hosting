@@ -58,4 +58,15 @@ data:
     # ReadWriteSplit documentation:
     # https://mariadb.com/kb/en/mariadb-maxscale-25-readwritesplit/
 
-    
+    [mariadbsvc]
+    router=smartrouter
+    master=ghost-master
+    type=service
+    targets=ghost-master,ghost-replica
+    user=root
+    password={{.Values.mysql.rootPassword}}
+
+    [mariadblistener]
+    port=3306
+    service=mariadbsvc
+    type=listener
