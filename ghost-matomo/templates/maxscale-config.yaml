@@ -68,7 +68,6 @@ data:
     transaction_replay_retry_on_deadlock=false
     transaction_replay_retry_on_mismatch=false
     transaction_replay_timeout=3000ms
-    max_slave_connections=0
     causal_reads=false
     connection_timeout=300s
     master_accept_reads=true
