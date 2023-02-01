@@ -49,8 +49,13 @@ spec:
                 readOnly: false
         ingress:
           enabled: true
+          annotations:
+            external-dns: "true"
           hosts:
-            - proxysql.{{.Release.Namespace}}.findi.biz
+            - host: proxysql.{{.Release.Namespace}}.findi.biz
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
 
   # Destination cluster and namespace to deploy the application
   destination:
