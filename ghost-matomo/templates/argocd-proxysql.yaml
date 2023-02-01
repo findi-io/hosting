@@ -61,11 +61,18 @@ spec:
           enabled: true
           annotations:
             external-dns: "true"
+            kubernetes.io/tls-acme: "true"
+            cert-manager.io/issuer: example-issuer
           hosts:
             - host: proxysql.{{.Release.Namespace}}.findi.biz
               paths:
                 - path: /
                   pathType: ImplementationSpecific
+
+          tls:
+            - secretName: proxysql-{{.Release.Namespace}}-tls
+              hosts:
+                - proxysql.{{.Release.Namespace}}.findi.biz
 
   # Destination cluster and namespace to deploy the application
   destination:
