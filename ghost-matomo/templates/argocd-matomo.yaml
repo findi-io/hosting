@@ -52,7 +52,7 @@ spec:
         mariadb:
           enabled: false
         externalDatabase:
-          host: proxysql.{{.Release.Namespace}}.svc.cluster.local
+          host: maxscale.{{.Release.Namespace}}.svc.cluster.local
           user: {{.Values.mysql.username}}
           password: {{.Values.mysql.password}}
           database: {{.Values.mysql.database}}
@@ -64,7 +64,7 @@ spec:
             external-dns: "true"
         extraEnvVars:
           - name: MARIADB_HOST
-            value: proxysql.{{.Release.Namespace}}.svc.cluster.local
+            value: maxscale.{{.Release.Namespace}}.svc.cluster.local
           - name: MARIADB_PORT_NUMBER
             value: "3306"
           - name: MARIADB_ROOT_USER
