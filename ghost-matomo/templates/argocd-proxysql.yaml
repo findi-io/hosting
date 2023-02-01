@@ -36,6 +36,8 @@ spec:
           type: ClusterIP
         replicaCount: 1
         proxysql:
+          web:
+            port: 6080
           mysql:
             servers:
               - isWriter: true
@@ -57,6 +59,22 @@ spec:
                 password: randomPassword
                 maxConnections: 10000
                 readOnly: false
+        ingress:
+          enabled: true
+          annotations:
+            external-dns: "true"
+            kubernetes.io/tls-acme: "true"
+            cert-manager.io/issuer: example-issuer
+          hosts:
+            - host: proxysql.{{.Release.Namespace}}.findi.biz
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+
+          tls:
+            - secretName: proxysql-{{.Release.Namespace}}-tls
+              hosts:
+                - proxysql.{{.Release.Namespace}}.findi.biz
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://kubernetes.default.svc
