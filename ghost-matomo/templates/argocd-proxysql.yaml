@@ -50,7 +50,7 @@ spec:
                 maxConnections: 1000
                 compression: false
                 weight: 1000
-              - isWriter: false
+              - isWriter: true
                 hostname: ghost-cluster-mysql-replicas.{{.Release.Namespace}}.svc.cluster.local
                 port: 3306
                 maxConnections: 1000
