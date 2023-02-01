@@ -36,6 +36,8 @@ spec:
           type: ClusterIP
         replicaCount: 1
         proxysql:
+          monitor:
+            enabled: true
           web:
             port: 6080
           mysql:
