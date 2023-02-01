@@ -16,6 +16,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -101,6 +102,10 @@ public class Application {
 										.queryParam("url",
 												exchange.getRequest().getURI().toString())
 										.queryParam("ua", exchange.getRequest().getHeaders().getFirst(HttpHeaders.USER_AGENT));
+								HttpCookie cookie = exchange.getRequest().getCookies().getFirst("ghost-members-ssr");
+								if(cookie != null) {
+									uriBuilder = uriBuilder.queryParam("uid", cookie.getValue());
+								}
 								URI uri = uriBuilder.build();
 								logger.info(uri.toString());
 								return uri;
