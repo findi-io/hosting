@@ -64,7 +64,7 @@ spec:
             external-dns: "true"
         extraEnvVars:
           - name: MARIADB_HOST
-            value: maxscale.{{.Release.Namespace}}.svc.cluster.local
+            value: proxysql.{{.Release.Namespace}}.svc.cluster.local
           - name: MARIADB_PORT_NUMBER
             value: "3306"
           - name: MARIADB_ROOT_USER
