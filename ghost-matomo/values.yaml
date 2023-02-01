@@ -2,7 +2,7 @@ ghost:
   email_from:  ghost@test.com
 matomo:
   salt: 20b63aad3180889357eebd42433d4f82
-  password: c66deb51146b875f7afa35f28f61166d27cb223bf9c7ed7e753e2545f8a0cb9b0a8bb8a80b3c6488e0836355b0d6ea46da1176bd08c49743d8137d10ce43dbc4
+  token_password: c66deb51146b875f7afa35f28f61166d27cb223bf9c7ed7e753e2545f8a0cb9b0a8bb8a80b3c6488e0836355b0d6ea46da1176bd08c49743d8137d10ce43dbc4
   token_auth: 12078e6dafa7484b11978f76fdc8726b
   username: ghost
   password: randomPassword
