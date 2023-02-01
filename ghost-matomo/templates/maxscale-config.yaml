@@ -25,13 +25,13 @@ data:
 
     [ghost-master]
     type=server
-    address=ghost-cluster-mysql-master.{{.Release.Namespace}}.svc.cluster.local
+    address=ghost-cluster-mysql-0.mysql.{{.Release.Namespace}}.svc.cluster.local
     port=3306
     protocol=MariaDBBackend
 
     [ghost-replica]
     type=server
-    address=ghost-cluster-mysql-replicas.{{.Release.Namespace}}.svc.cluster.local
+    address=ghost-cluster-mysql-1.mysql.{{.Release.Namespace}}.svc.cluster.local
     port=3306
     protocol=MariaDBBackend
 
@@ -59,12 +59,22 @@ data:
     # https://mariadb.com/kb/en/mariadb-maxscale-25-readwritesplit/
 
     [mariadbsvc]
-    router=smartrouter
-    master=ghost-master
-    type=service
-    targets=ghost-master,ghost-replica
-    user=root
     password={{.Values.mysql.rootPassword}}
+    router=readwritesplit
+    type=service
+    user=root
+    master_failure_mode=fail_instantly
+    max_slave_replication_lag=3s
+    transaction_replay_retry_on_deadlock=false
+    transaction_replay_retry_on_mismatch=false
+    transaction_replay_timeout=3000ms
+    max_slave_connections=0
+    causal_reads=false
+    connection_timeout=300s
+    master_accept_reads=true
+    master_reconnection=true
+    slave_selection_criteria=LEAST_CURRENT_OPERATIONS
+    targets=ghost-master,ghost-replica
 
     [mariadblistener]
     port=3306
