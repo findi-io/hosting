@@ -5,8 +5,6 @@ metadata:
   # Add labels to your application object.
   labels:
     name: ghost
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
 spec:
   # The project the application belongs to.
   project: {{.Release.Namespace}}
@@ -25,13 +23,18 @@ spec:
       releaseName: ghost
       version: v3
       values: |
+        smtpHost: "smtp4dev.{{.Release.Namespace}}.svc"
+        smtpPort: "25"
+        smtpUser: "anyuser"
+        smtpPassword: "anypassword"
+        smtpService: "Mailgun"
         resources:
           requests:
-            memory: "512Mi"
-            cpu: "200m"
+            memory: "300Mi"
+            cpu: "150m"
           limits:
-            memory: "512Mi"
-            cpu: "200m"
+            memory: "300Mi"
+            cpu: "150m"
         service:
           type: ClusterIP
         replicaCount: 1
@@ -42,31 +45,21 @@ spec:
         persistence:
           enabled: true
           size: 1Gi
-        extraVolumes:
-          - configMap:
-              defaultMode: 420
-              name: ghost-config
-            name: ghost-config
-          - configMap:
-              defaultMode: 420
-              name: ghost-patch
-            name: ghost-patch
-        extraVolumeMounts:
-          - mountPath: /opt/bitnami/ghost/config.production.json
-            name: ghost-config
-            subPath: config.production.json
-          - mountPath: /opt/bitnami/scripts/libghost.sh
-            name: ghost-patch
-            subPath: libghost.sh
         mysql:
-          enabled: false
-        externalDatabase:
-          host: maxscale.{{.Release.Namespace}}.svc.cluster.local
-          user: {{.Values.mysql.username}}
-          password: {{.Values.mysql.password}}
-          database: {{.Values.mysql.database}}
+          enabled: true
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "150m"
+            limits:
+              memory: "300Mi"
+              cpu: "150m"
         ingress:
-          enabled: false
+          enabled: true
+          hostname: ghost.{{.Release.Namespace}}.findi.biz
+          tls: false
+          annotations:
+            external-dns: "true"
 
   # Destination cluster and namespace to deploy the application
   destination:
