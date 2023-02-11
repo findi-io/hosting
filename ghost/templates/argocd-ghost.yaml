@@ -23,6 +23,8 @@ spec:
       releaseName: ghost
       version: v3
       values: |
+        ghostPassword: ghost
+        ghostHost: ghost.{{.Release.Namespace}}.findi.biz
         smtpHost: "smtp4dev.{{.Release.Namespace}}.svc"
         smtpPort: "25"
         smtpUser: "anyuser"
