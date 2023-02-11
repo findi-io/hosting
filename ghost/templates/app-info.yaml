@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ghost-config
+  name: app-info
 data:
   titlle: ghost
   description: bala bala
