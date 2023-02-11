@@ -53,18 +53,18 @@ spec:
             persistence:
               enabled: true
               size: 1Gi
+            resources:
+              requests:
+                memory: "300Mi"
+                cpu: "150m"
+              limits:
+                memory: "300Mi"
+                cpu: "150m"
           auth:
             rootPassword: "randomPassword"
             database: bitnami_ghost
             username: bn_ghost
             password: "randomPassword"
-          resources:
-            requests:
-              memory: "300Mi"
-              cpu: "150m"
-            limits:
-              memory: "500Mi"
-              cpu: "300m"
         ingress:
           enabled: true
           hostname: ghost.{{.Release.Namespace}}.findi.biz
