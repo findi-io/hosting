@@ -41,8 +41,6 @@ spec:
             cpu: "150m"
         service:
           type: ClusterIP
-        replicaCount: 1
-        ghostSkipInstall: true
         ghostEnableHttps: false
         podAnnotations:
           sidecar.istio.io/inject: "false"
@@ -52,7 +50,8 @@ spec:
         mysql:
           enabled: false
         externalDatabase:
-          host: mysql.{{.Release.Namespace}}.svc
+          host: mysql.{{.Release.Namespace}}.svc.cluster.local
+          port: 3306
           user: bn_ghost
           password: randomPassword
           database: bitnami_ghost
