@@ -27,7 +27,7 @@ data:
       },
       "mail": {
         "transport": "SMTP",
-        "from": "{{.Values.ghost.email_from}}",
+        "from": "user@example.com",
         "options": {
           "host": "smtp4dev.{{.Release.Namespace}}.svc.cluster.local",
           "port": 25,
