@@ -49,6 +49,9 @@ spec:
           size: 1Gi
         mysql:
           enabled: true
+          persistence:
+            enabled: true
+            size: 1Gi
           auth:
             rootPassword: "randomPassword"
             database: bitnami_ghost
