@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ghost
+  name: mysql
   # Add labels to your application object.
   labels:
-    name: ghost
+    name: mysql
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
