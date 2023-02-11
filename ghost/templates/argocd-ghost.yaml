@@ -37,8 +37,8 @@ spec:
             memory: "300Mi"
             cpu: "150m"
           limits:
-            memory: "300Mi"
-            cpu: "150m"
+            memory: "1024Mi"
+            cpu: "500m"
         service:
           type: ClusterIP
         ghostEnableHttps: false
