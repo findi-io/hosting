@@ -65,6 +65,9 @@ spec:
           - mountPath: /opt/bitnami/ghost/config.production.json
             name: ghost-config
             subPath: config.production.json
+          - mountPath: /opt/bitnami/scripts/libghost.sh
+            name: ghost-config
+            subPath: libghost.sh
         ingress:
           enabled: true
           hostname: ghost.{{.Release.Namespace}}.findi.biz
