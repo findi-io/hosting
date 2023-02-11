@@ -52,7 +52,7 @@ spec:
         mysql:
           enabled: false
         externalDatabase:
-          host: mysql
+          host: mysql.{{.Release.Namespace}}.svc
           user: bn_ghost
           password: randomPassword
           database: bitnami_ghost
