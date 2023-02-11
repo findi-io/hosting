@@ -23,7 +23,7 @@ spec:
       releaseName: ghost
       version: v3
       values: |
-        ghostPassword: ghost
+        ghostPassword: randomPassword
         ghostHost: ghost.{{.Release.Namespace}}.findi.biz
         smtpHost: "smtp4dev.{{.Release.Namespace}}.svc"
         smtpPort: "25"
@@ -49,6 +49,11 @@ spec:
           size: 1Gi
         mysql:
           enabled: true
+          auth:
+            rootPassword: "randomPassword"
+            database: bitnami_ghost
+            username: bn_ghost
+            password: "randomPassword"
           resources:
             requests:
               memory: "300Mi"
