@@ -6,7 +6,7 @@ metadata:
   labels:
     name: ghost
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   # The project the application belongs to.
   project: {{.Release.Namespace}}
@@ -14,54 +14,33 @@ spec:
   # Source of the application manifests
   source:
     repoURL: https://charts.bitnami.com/bitnami  # Can point to either a Helm chart repo or a git repo.
-    targetRevision: 19.1.61  # For Helm, this refers to the chart version.
-    chart: ghost  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+    targetRevision: 9.4.8  # For Helm, this refers to the chart version.
+    chart: mysql  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
 
     helm:
       passCredentials: false # If true then adds --pass-credentials to Helm commands to pass credentials to all domains
       # Extra parameters to set (same as setting through values.yaml, but these take precedence)
 
       # Release name override (defaults to application name)
-      releaseName: ghost
+      releaseName: mysql
       version: v3
       values: |
-        ghostPassword: randomPassword
-        ghostHost: ghost.{{.Release.Namespace}}.findi.biz
-        smtpHost: "smtp4dev.{{.Release.Namespace}}.svc"
-        smtpPort: "25"
-        smtpUser: "anyuser"
-        smtpPassword: "anypassword"
-        smtpService: "Mailgun"
-        resources:
-          requests:
-            memory: "300Mi"
-            cpu: "150m"
-          limits:
-            memory: "300Mi"
-            cpu: "150m"
-        service:
-          type: ClusterIP
-        replicaCount: 1
-        ghostSkipInstall: true
-        ghostEnableHttps: false
-        podAnnotations:
-          sidecar.istio.io/inject: "false"
-        persistence:
-          enabled: true
-          size: 1Gi
-        mysql:
-          enabled: false
-        externalDatabase:
-          host: mysql.{{.Release.Namespace}}.svc.cluster.local
-          user: bn_ghost
-          password: randomPassword
+        primary:
+          persistence:
+            enabled: true
+            size: 1Gi
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "150m"
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+        auth:
+          rootPassword: "randomPassword"
           database: bitnami_ghost
-        ingress:
-          enabled: true
-          hostname: ghost.{{.Release.Namespace}}.findi.biz
-          tls: false
-          annotations:
-            external-dns: "true"
+          username: bn_ghost
+          password: "randomPassword"
 
   # Destination cluster and namespace to deploy the application
   destination:
