@@ -41,6 +41,7 @@ spec:
             cpu: "500m"
         service:
           type: ClusterIP
+        ghostSkipInstall: true
         ghostEnableHttps: false
         podAnnotations:
           sidecar.istio.io/inject: "false"
@@ -55,6 +56,15 @@ spec:
           user: bn_ghost
           password: randomPassword
           database: bitnami_ghost
+        extraVolumes:
+          - configMap:
+              defaultMode: 420
+              name: ghost-config
+            name: ghost-config
+        extraVolumeMounts:
+          - mountPath: /opt/bitnami/ghost/config.production.json
+            name: ghost-config
+            subPath: config.production.json
         ingress:
           enabled: true
           hostname: ghost.{{.Release.Namespace}}.findi.biz
