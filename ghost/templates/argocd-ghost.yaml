@@ -63,8 +63,8 @@ spec:
               memory: "300Mi"
               cpu: "150m"
             limits:
-              memory: "300Mi"
-              cpu: "150m"
+              memory: "500Mi"
+              cpu: "300m"
         ingress:
           enabled: true
           hostname: ghost.{{.Release.Namespace}}.findi.biz
