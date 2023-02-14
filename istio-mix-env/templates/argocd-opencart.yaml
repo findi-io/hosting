@@ -58,7 +58,6 @@ spec:
             nginx.ingress.kubernetes.io/upstream-vhost: "opencart.{{.Release.Namespace}}.svc.cluster.local"
           extraDeploy:
             - |
-              ---
               apiVersion: v1
               kind: PersistentVolumeClaim
               metadata:
@@ -73,7 +72,7 @@ spec:
                 resources:
                   requests:
                     storage: 1Gi
-              ---
+            - |
               apiVersion: apps/v1
               kind: Deployment
               metadata:
