@@ -17,6 +17,8 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   labels:
     app.kubernetes.io/instance: opencart
     app.kubernetes.io/name: opencart
