@@ -131,17 +131,6 @@ spec:
                           name: opencart
                     - name: OPENCART_EMAIL
                       value: user@example.com
-                    - name: SMTP_HOST
-                      value: smtp4dev.{{.Release.Namespace}}.svc.cluster.local
-                    - name: SMTP_PORT
-                      value: "25"
-                    - name: SMTP_USER
-                      value: anyuser
-                    - name: SMTP_PASSWORD
-                      valueFrom:
-                        secretKeyRef:
-                          key: smtp-password
-                          name: opencart
                     image: docker.io/bitnami/opencart:4.0.1-1-debian-11-r52
                     imagePullPolicy: IfNotPresent
                     livenessProbe:
