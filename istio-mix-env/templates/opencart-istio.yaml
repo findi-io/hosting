@@ -1,0 +1,43 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: opencart-dr
+spec:
+  host: opencart.{{.Release.Namespace}}.svc.cluster.local
+  trafficPolicy:
+    portLevelSettings:
+    - port:
+        number: 80
+      tls:
+        mode: ISTIO_MUTUAL
+  subsets:
+  - name: test
+    labels:
+      findi.io/env: test
+  - name: prod
+    labels:
+      findi.io/env: prod
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: opencart-vs
+spec:
+  hosts:
+  - opencart.{{.Release.Namespace}}.svc.cluster.local
+  http:
+  - name: "test"
+    match:
+    - headers:
+        x-findi-env:
+          exact: test
+    route:
+    - destination:
+        host: opencart.{{.Release.Namespace}}.svc.cluster.local
+        subset: test
+  - name: "portal-default"
+    route:
+    - destination:
+        subset: prod
+        host: opencart.{{.Release.Namespace}}.svc.cluster.local

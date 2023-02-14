@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maxscale-config
+data:
+  mariadb-maxscale.cnf: |
+    [maxscale]
+    threads=auto
+    admin_secure_gui=false
+    log_info=true
+    log_debug=true
+    log_warn_super_user=true
+    skip_name_resolve=true
+    admin_host=0.0.0.0
+
+    [mariadb-master]
+    type=server
+    address=mariadb.{{.Release.Namespace}}.svc.cluster.local
+    port=3306
+    protocol=MariaDBBackend
+
+    [mariadb]
+    type=monitor
+    module=mariadbmon
+    servers=mariadb-master
+    user=root
+    password=randomPassword
+
+    [testRewrite]
+    type=filter
+    module=rewritefilter
+    log_replacement=true
+    template_file=/etc/maxscale.rf
+
+    [testsvc]
+    password=randomPassword
+    router=readwritesplit
+    type=service
+    user=root
+    master_failure_mode=fail_instantly
+    max_slave_replication_lag=3s
+    max_slave_connections=0
+    transaction_replay_retry_on_deadlock=false
+    transaction_replay_retry_on_mismatch=false
+    transaction_replay_timeout=3000ms
+    causal_reads=false
+    connection_timeout=300s
+    master_accept_reads=true
+    master_reconnection=false
+    slave_selection_criteria=LEAST_CURRENT_OPERATIONS
+    targets=mariadb-master
+    filters=testRewrite
+
+    [prodsvc]
+    password=randomPassword
+    router=readwritesplit
+    type=service
+    user=root
+    master_failure_mode=fail_instantly
+    max_slave_replication_lag=3s
+    transaction_replay_retry_on_deadlock=false
+    transaction_replay_retry_on_mismatch=false
+    transaction_replay_timeout=3000ms
+    causal_reads=false
+    max_slave_connections=0
+    connection_timeout=300s
+    master_accept_reads=true
+    master_reconnection=false
+    slave_selection_criteria=LEAST_CURRENT_OPERATIONS
+    targets=mariadb-master
+
+    [prodlistener]
+    port=3306
+    service=prodsvc
+    type=listener
+
+    [testlistener]
+    port=3307
+    service=testsvc
+    type=listener
+
+
+  maxscale.rf: |
+    %%
+    regex_grammar: EPosix
+    continue_if_matched: true
+    %
+    oc_order(.*)
+    %
+    oc_test_order$1
+
+    %%
+    regex_grammar: EPosix
+    continue_if_matched: true
+    %
+    oc_order(.*)
+    %
+    oc_test_order$1
+
+    %%
+    regex_grammar: EPosix
+    continue_if_matched: true
+    %
+    oc_order(.*)
+    %
+    oc_test_order$1
+
+    %%
+    regex_grammar: EPosix
+    continue_if_matched: true
+    %
+    oc_order(.*)
+    %
+    oc_test_order$1

@@ -1,0 +1,233 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mariadb
+  # Add labels to your application object.
+  labels:
+    name: mariadb
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  # The project the application belongs to.
+  project: {{.Release.Namespace}}
+
+  # Source of the application manifests
+  source:
+    repoURL: https://charts.bitnami.com/bitnami  # Can point to either a Helm chart repo or a git repo.
+    targetRevision: 11.4.6  # For Helm, this refers to the chart version.
+    chart: mariadb  # This has no meaning for Helm charts pulled directly from a Helm repo instead of git.
+
+    helm:
+      passCredentials: false # If true then adds --pass-credentials to Helm commands to pass credentials to all domains
+      # Extra parameters to set (same as setting through values.yaml, but these take precedence)
+
+      # Release name override (defaults to application name)
+      releaseName: mariadb
+      version: v3
+      values: |
+        primary:
+          podAnnotations:
+            sidecar.istio.io/inject: "false"
+          persistence:
+            enabled: true
+            size: 1Gi
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "150m"
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
+        auth:
+          rootPassword: "randomPassword"
+          database: bitnami_opencart
+          username: bn_opencart
+          password: "randomPassword"
+          replicationPassword: "randomPassword"
+        initdbScripts:
+          create-tables.sql: |
+            use bitnami_opencart;
+            CREATE TABLE IF NOT EXISTS  `oc_test_order` (
+              `order_id` int(11) NOT NULL AUTO_INCREMENT,
+              `transaction_id` varchar(100) NOT NULL,
+              `invoice_no` int(11) NOT NULL DEFAULT 0,
+              `invoice_prefix` varchar(26) NOT NULL,
+              `store_id` int(11) NOT NULL DEFAULT 0,
+              `store_name` varchar(64) NOT NULL,
+              `store_url` varchar(255) NOT NULL,
+              `customer_id` int(11) NOT NULL DEFAULT 0,
+              `customer_group_id` int(11) NOT NULL DEFAULT 0,
+              `firstname` varchar(32) NOT NULL,
+              `lastname` varchar(32) NOT NULL,
+              `email` varchar(96) NOT NULL,
+              `telephone` varchar(32) NOT NULL,
+              `custom_field` text NOT NULL,
+              `payment_firstname` varchar(32) NOT NULL,
+              `payment_lastname` varchar(32) NOT NULL,
+              `payment_company` varchar(60) NOT NULL,
+              `payment_address_1` varchar(128) NOT NULL,
+              `payment_address_2` varchar(128) NOT NULL,
+              `payment_city` varchar(128) NOT NULL,
+              `payment_postcode` varchar(10) NOT NULL,
+              `payment_country` varchar(128) NOT NULL,
+              `payment_country_id` int(11) NOT NULL,
+              `payment_zone` varchar(128) NOT NULL,
+              `payment_zone_id` int(11) NOT NULL,
+              `payment_address_format` text NOT NULL,
+              `payment_custom_field` text NOT NULL,
+              `payment_method` varchar(128) NOT NULL,
+              `payment_code` varchar(128) NOT NULL,
+              `shipping_firstname` varchar(32) NOT NULL,
+              `shipping_lastname` varchar(32) NOT NULL,
+              `shipping_company` varchar(60) NOT NULL,
+              `shipping_address_1` varchar(128) NOT NULL,
+              `shipping_address_2` varchar(128) NOT NULL,
+              `shipping_city` varchar(128) NOT NULL,
+              `shipping_postcode` varchar(10) NOT NULL,
+              `shipping_country` varchar(128) NOT NULL,
+              `shipping_country_id` int(11) NOT NULL,
+              `shipping_zone` varchar(128) NOT NULL,
+              `shipping_zone_id` int(11) NOT NULL,
+              `shipping_address_format` text NOT NULL,
+              `shipping_custom_field` text NOT NULL,
+              `shipping_method` varchar(128) NOT NULL,
+              `shipping_code` varchar(128) NOT NULL,
+              `comment` text NOT NULL,
+              `total` decimal(15,4) NOT NULL DEFAULT 0.0000,
+              `order_status_id` int(11) NOT NULL DEFAULT 0,
+              `affiliate_id` int(11) NOT NULL,
+              `commission` decimal(15,4) NOT NULL,
+              `marketing_id` int(11) NOT NULL,
+              `tracking` varchar(64) NOT NULL,
+              `language_id` int(11) NOT NULL,
+              `language_code` varchar(5) NOT NULL,
+              `currency_id` int(11) NOT NULL,
+              `currency_code` varchar(3) NOT NULL,
+              `currency_value` decimal(15,8) NOT NULL DEFAULT 1.00000000,
+              `ip` varchar(40) NOT NULL,
+              `forwarded_ip` varchar(40) NOT NULL,
+              `user_agent` varchar(255) NOT NULL,
+              `accept_language` varchar(255) NOT NULL,
+              `date_added` datetime NOT NULL,
+              `date_modified` datetime NOT NULL,
+              PRIMARY KEY (`order_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            CREATE TABLE  IF NOT EXISTS `oc_test_order_history` (
+              `order_history_id` int(11) NOT NULL AUTO_INCREMENT,
+              `order_id` int(11) NOT NULL,
+              `order_status_id` int(11) NOT NULL,
+              `notify` tinyint(1) NOT NULL DEFAULT 0,
+              `comment` text NOT NULL,
+              `date_added` datetime NOT NULL,
+              PRIMARY KEY (`order_history_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            CREATE TABLE  IF NOT EXISTS `oc_test_order_option` (
+              `order_option_id` int(11) NOT NULL AUTO_INCREMENT,
+              `order_id` int(11) NOT NULL,
+              `order_product_id` int(11) NOT NULL,
+              `product_option_id` int(11) NOT NULL,
+              `product_option_value_id` int(11) NOT NULL DEFAULT 0,
+              `name` varchar(255) NOT NULL,
+              `value` text NOT NULL,
+              `type` varchar(32) NOT NULL,
+              PRIMARY KEY (`order_option_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            CREATE TABLE  IF NOT EXISTS `oc_test_order_product` (
+              `order_product_id` int(11) NOT NULL AUTO_INCREMENT,
+              `order_id` int(11) NOT NULL,
+              `product_id` int(11) NOT NULL,
+              `master_id` int(11) NOT NULL,
+              `name` varchar(255) NOT NULL,
+              `model` varchar(64) NOT NULL,
+              `quantity` int(4) NOT NULL,
+              `price` decimal(15,4) NOT NULL DEFAULT 0.0000,
+              `total` decimal(15,4) NOT NULL DEFAULT 0.0000,
+              `tax` decimal(15,4) NOT NULL DEFAULT 0.0000,
+              `reward` int(8) NOT NULL,
+              PRIMARY KEY (`order_product_id`),
+              KEY `order_id` (`order_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            CREATE TABLE `oc_test_order_status` (
+              `order_status_id` int(11) NOT NULL AUTO_INCREMENT,
+              `language_id` int(11) NOT NULL,
+              `name` varchar(32) NOT NULL,
+              PRIMARY KEY (`order_status_id`,`language_id`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            CREATE TABLE `oc_test_order_total` (
+              `order_total_id` int(10) NOT NULL AUTO_INCREMENT,
+              `order_id` int(11) NOT NULL,
+              `extension` varchar(255) NOT NULL,
+              `code` varchar(32) NOT NULL,
+              `title` varchar(255) NOT NULL,
+              `value` decimal(15,4) NOT NULL DEFAULT 0.0000,
+              `sort_order` int(3) NOT NULL,
+              PRIMARY KEY (`order_total_id`),
+              KEY `order_id` (`order_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+            CREATE TABLE `oc_test_order_voucher` (
+              `order_voucher_id` int(11) NOT NULL AUTO_INCREMENT,
+              `order_id` int(11) NOT NULL,
+              `voucher_id` int(11) NOT NULL,
+              `description` varchar(255) NOT NULL,
+              `code` varchar(10) NOT NULL,
+              `from_name` varchar(64) NOT NULL,
+              `from_email` varchar(96) NOT NULL,
+              `to_name` varchar(64) NOT NULL,
+              `to_email` varchar(96) NOT NULL,
+              `voucher_theme_id` int(11) NOT NULL,
+              `message` text NOT NULL,
+              `amount` decimal(15,4) NOT NULL,
+              PRIMARY KEY (`order_voucher_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+
+
+  # Destination cluster and namespace to deploy the application
+  destination:
+    server: https://kubernetes.default.svc
+    # The namespace will only be set for namespace-scoped resources that have not set a value for .metadata.namespace
+    namespace: {{.Release.Namespace}}
+
+  # Sync policy
+  syncPolicy:
+    automated: # automated sync by default retries failed attempts 5 times with following delays between attempts ( 5s, 10s, 20s, 40s, 80s ); retry controlled using `retry` field.
+      prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
+      selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
+      allowEmpty: false # Allows deleting all application resources during automatic syncing ( false by default ).
+    syncOptions:     # Sync options which modifies sync behavior
+    - Validate=false # disables resource validation (equivalent to 'kubectl apply --validate=false') ( true by default ).
+    - CreateNamespace=false # Namespace Auto-Creation ensures that namespace specified as the application destination exists in the destination cluster.
+    - PrunePropagationPolicy=foreground # Supported policies are background, foreground and orphan.
+    - PruneLast=true # Allow the ability for resource pruning to happen as a final, implicit wave of a sync operation
+    # The retry feature is available since v1.7
+    - RespectIgnoreDifferences=true
+    retry:
+      limit: 5 # number of failed sync attempt retries; unlimited number of attempts if less than 0
+      backoff:
+        duration: 5s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
+        factor: 2 # a factor to multiply the base duration after each failed retry
+        maxDuration: 3m # the maximum amount of time allowed for the backoff strategy
+
+  # Will ignore differences between live and desired states during the diff. Note that these configurations are not
+  # used during the sync process.
+  ignoreDifferences:
+  # for the specified json pointers
+  - group: apps
+    kind: Deployment
+    jsonPointers:
+    - /spec/replicas
+  - group: apps
+    kind: Statefulset
+    jsonPointers:
+    - /spec/replicas
+  # for the specified managedFields managers
+  - group: "*"
+    kind: "*"
+    managedFieldsManagers:
+    - kube-controller-manager
+  - group: "*"
+    kind: MutatingWebhookConfiguration
+    jsonPointers:
+    - /webhooks/0/clientConfig/caBundle
