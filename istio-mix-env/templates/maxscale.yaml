@@ -11,10 +11,12 @@ spec:
       protocol: TCP
       port: 3306
       targetPort: 3306
+      appProtocol: mysql
     - name: mysqltest
       protocol: TCP
       port: 3307
       targetPort: 3307
+      appProtocol: mysql
     - name: http
       protocol: TCP
       port: 8989
