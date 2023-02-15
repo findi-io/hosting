@@ -91,7 +91,6 @@ spec:
                     prometheus.io/port: "9117"
                     prometheus.io/scrape: "true"
                     sidecar.istio.io/inject: "true"
-                    traffic.sidecar.istio.io/excludeOutboundPorts: "3307"
                   labels:
                     app.kubernetes.io/instance: opencart
                     app.kubernetes.io/name: opencart
