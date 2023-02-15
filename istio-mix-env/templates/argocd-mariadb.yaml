@@ -27,7 +27,7 @@ spec:
       values: |
         primary:
           podAnnotations:
-            sidecar.istio.io/inject: "false"
+            sidecar.istio.io/inject: "true"
           persistence:
             enabled: true
             size: 1Gi
