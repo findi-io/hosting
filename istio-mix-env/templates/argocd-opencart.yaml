@@ -34,7 +34,6 @@ spec:
           type: ClusterIP
         podAnnotations:
           sidecar.istio.io/inject: "true"
-          traffic.sidecar.istio.io/excludeOutboundPorts: "3306"
         podLabels:
           findi.io/env: prod
         persistence:
