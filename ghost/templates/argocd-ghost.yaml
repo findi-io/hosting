@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ghost
+  name: {{.Release.Namespace}}-ghost
   # Add labels to your application object.
   labels:
     name: ghost
