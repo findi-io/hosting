@@ -77,7 +77,7 @@ spec:
           annotations:
             external-dns: "true"
             kubernetes.io/tls-acme: "true"
-            cert-manager.io/issuer: issuer-nginx
+            cert-manager.io/cluster-issuer: issuer-nginx
 
   # Destination cluster and namespace to deploy the application
   destination:
