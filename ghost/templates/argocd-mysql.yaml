@@ -26,6 +26,8 @@ spec:
       version: v3
       values: |
         primary:
+          podAnnotations:
+            sidecar.istio.io/inject: "false"
           persistence:
             enabled: true
             size: 1Gi
