@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mysql
+  name: {{.Release.Namespace}}-mysql
   # Add labels to your application object.
   labels:
     name: mysql
