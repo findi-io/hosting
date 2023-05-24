@@ -73,9 +73,11 @@ spec:
         ingress:
           enabled: true
           hostname: ghost.{{.Release.Namespace}}.findi.biz
-          tls: false
+          tls: true
           annotations:
             external-dns: "true"
+            kubernetes.io/tls-acme: "true"
+            cert-manager.io/issuer: issuer-nginx
 
   # Destination cluster and namespace to deploy the application
   destination:
