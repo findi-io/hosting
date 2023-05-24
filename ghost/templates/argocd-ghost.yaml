@@ -9,7 +9,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   # The project the application belongs to.
-  project: {{.Release.Namespace}}
+  project: proj-{{.Release.Namespace}}
 
   # Source of the application manifests
   source:
